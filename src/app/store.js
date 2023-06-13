@@ -4,6 +4,11 @@ import { createLogger } from 'redux-logger';
 import cakeReducer from '../features/cake/cakeSlice';
 import icecreamReducer from '../features/icecream/icecreamSlice';
 import userReducer from '../features/user/userSlice';
+import postReducer from '../features/post/postSlice';
+import createSagaMiddleware from 'redux-saga';
+import postSaga from '../features/post/postSaga';
+
+const saga = createSagaMiddleware();
 
 const logger = createLogger();
 
@@ -12,8 +17,12 @@ const store = configureStore({
     cake: cakeReducer,
     icecream: icecreamReducer,
     user: userReducer,
+    post: postReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(logger, saga),
 });
+
+saga.run(postSaga);
 
 export default store;
